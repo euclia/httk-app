@@ -1,0 +1,10 @@
+<!-- <p>
+  parametersteps works!
+</p> -->
+<mat-vertical-stepper [linear]="true" #stepper>
+
+    <mat-step *ngFor="let parameter of parameters" [stepControl]="parametersFormGroup">
+        <ng-template matStepLabel>{{parameter.name}}</ng-template>
+
+    </mat-step>
+</mat-vertical-stepper>

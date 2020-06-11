@@ -1,0 +1,16 @@
+/* .svg{
+    width: calc(100%);
+    height: calc(100%);
+    margin: auto;
+} */
+
+.axis--x path {
+    display: none;
+}
+    
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+    background: inherit;
+}

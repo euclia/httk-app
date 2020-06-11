@@ -1,0 +1,40 @@
+<div class="httk-models">
+    <mat-paginator class="paginator" [length]="totalFound"
+              [pageSize]="20"
+              (page)="pageEvent = $event; onPaginateChange($event)">
+    </mat-paginator>
+  <mat-accordion>
+    <div *ngFor="let model of models_to_view" class="httk-model">
+      <mat-expansion-panel (opened)="panelOpened(model)" (closed)="panelClosed(model)">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{model.meta.titles[0]}}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{model.meta.descriptions[0]}}
+            {{model.meta.date | date}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <button matTooltip="Delete" mat-raised-button color="warn" (click)="delete(model)">
+            Delete
+        </button>
+        <h4>Predictions for: </h4>
+        <!-- <h5>Chem : {{model.parameters.chem(DOT)name}}</h5>
+        <h5>Dose : {{model.parameters.dose}}</h5>
+        <h5>Species : {{model.parameters.species}}</h5> -->
+        <div *ngFor="let parameter of model.parameters | keyvalue">
+          <h5>{{parameter.key}}: {{parameter.value[0]}}</h5>
+        </div>
+        
+        <div *ngIf="viewPrediction && actualPredicted" class="predicted">
+          <app-pbpk-predicted [predictedDataset]="actualPredicted"></app-pbpk-predicted>
+        </div>
+
+
+      </mat-expansion-panel>
+    </div>
+  </mat-accordion>
+
+</div>
+
+

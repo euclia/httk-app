@@ -1,0 +1,30 @@
+<div class="param-cont">
+    <h3 class="hea">
+      Parameter description
+    </h3>
+  
+  
+    <div class="paramaccordion">
+      <mat-accordion class="acc">
+        <mat-expansion-panel *ngFor="let parameter of parameters">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{parameter.name}}
+            </mat-panel-title>
+            <mat-panel-description>
+              {{parameter.name}} description
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+  
+          <p>{{parameter.description}}</p>
+          <mat-divider></mat-divider>
+          <p>Default value: {{parameter.value}}</p>
+          <mat-divider></mat-divider>
+          <p>Input value is: {{parameter.scope}}</p>
+          <mat-divider></mat-divider>
+          <p>Allowed value's are: {{parameter.allowedValues}}</p>
+  
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>

@@ -1,0 +1,86 @@
+<mat-toolbar color="primary">
+  <a routerLink="/createmodel">Httk</a>
+
+    <mat-divider [vertical]="true"></mat-divider>
+    <span class="example-spacer-2"></span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon matTooltip="Info about Httk">info</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu">
+        <mat-card class="card">
+    
+          <section class="mat-typography">
+            <mat-card-title>Info </mat-card-title>
+            <mat-divider></mat-divider>
+    
+            <div class="info accent-color">
+    
+              Functions and data tables for simulation and statistical analysis of chemical toxicokinetics ("TK") using
+              data obtained from
+              relatively high throughput, in vitro studies. Both physiologically-based ("PBTK") and empirical (e.g., one
+              compartment)
+              "TK" models can be parameterized for several hundred chemicals and multiple species. These models are solved
+              efficiently,
+              often using compiled (C-based) code. A Monte Carlo sampler is included for simulating biological variability
+              and
+              measurement limitations. Functions are also provided for exporting "PBTK" models to "SBML" and "JARNAC" for
+              use
+              with other simulation software. These functions and data provide a set of tools for in vitro-in vivo
+              extrapolation
+              ("IVIVE") of high throughput screening data (e.g., ToxCast) to real-world exposures via reverse dosimetry
+              (also
+              known as "RTK").
+    
+            </div>
+    
+            <mat-divider></mat-divider>
+    
+            <div class="implemented">
+              <h3>Implemented in </h3>
+            </div>
+            <div class="impim">
+              <img class="Rimg" src="assets/R.png">
+            </div>
+    
+          </section>
+        </mat-card>
+      </mat-menu>
+</mat-toolbar>
+
+<mat-divider></mat-divider>
+<div class="httk-rout">
+  <mat-list role="list" class="httk-list">
+
+    <mat-list-item role="listitem">
+
+      <button mat-mini-fab color="primary" matTooltip="Create httk model" routerLink="/createmodel">
+        <mat-icon class="side_icon">add</mat-icon>
+      </button>
+    </mat-list-item>
+    <mat-list-item role="listitem">
+      <button mat-mini-fab color="primary" matTooltip="View previous predictions"routerLink="/models" >
+        <mat-icon class="side_icon">cached</mat-icon>
+      </button>
+    </mat-list-item>
+    <mat-list-item role="listitem">
+      <!-- <button mat-mini-fab color="primary" matTooltip="My models">
+        <mat-icon class="side_icon">archive</mat-icon>
+
+      </button> -->
+    </mat-list-item>
+    <mat-list-item role="listitem">
+
+    </mat-list-item>
+    <mat-list-item role="listitem">
+      <mat-divider [vertical]="true" class="second"></mat-divider>
+    </mat-list-item>
+
+  </mat-list>
+
+</div>
+
+<div class="httk-routes">
+  <router-outlet></router-outlet>
+</div>

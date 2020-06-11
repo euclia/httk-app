@@ -1,0 +1,42 @@
+<button *ngIf="viewPredOnly" mat-raised-button color="primary" class="only_pred" (click)="viewOnlyPred()">
+    View predicted value only
+  </button>
+  
+  <button *ngIf="viewAll" mat-raised-button color="primary" class="only_pred" (click)="viewAllB()">
+    View all values
+  </button>
+  
+  <div class="data_table mat-elevation-z2">
+    <div class="">
+      <div class="example-loading-shade" *ngIf="isLoadingResults">
+        <mat-spinner></mat-spinner>
+      </div>
+      <div *ngIf="data_available" class="example-table-container">
+        <table mat-table [dataSource]="dataSource" class="table mat-elevation-z1">
+          <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+            <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+            <td mat-cell *matCellDef="let element">
+              <div *ngIf="column === 'image'; else noImage">
+                <img class="dataset_image" src="{{element[column]}}">
+              </div>
+              <ng-template #noImage> {{element[column]}}</ng-template>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </div>
+    <mat-paginator [length]="totalRows" [pageSize]="30"></mat-paginator>
+  </div>
+  
+  <div>
+    <button matTooltip="Downloads only the visible entries" mat-raised-button color="primary" class="only_pred" (click)="downloadB()">
+      Download 
+    </button>
+  
+    <button matTooltip="Holds the predicted dataset archived" mat-raised-button color="warn" >
+      Archive
+    </button>
+  </div>
+  
