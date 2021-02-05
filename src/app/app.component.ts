@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { Subscription,Observable } from 'rxjs';
 import { element } from 'protractor';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,7 @@ export class AppComponent implements OnInit {
 
   
 
-  constructor(public oidcSecurityService: OidcSecurityService){
+  constructor(public oidcSecurityService: OidcSecurityService, public router:Router){
   }
   ngOnInit( ) {
 
@@ -26,6 +27,7 @@ export class AppComponent implements OnInit {
       (isAuthorized: boolean) => {
         if(isAuthorized === true){
           this.loggedIn = true;
+          this.router.navigate(['/createmodel'])
         }else{
           this.loggedIn = false;
         }

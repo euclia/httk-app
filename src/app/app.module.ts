@@ -59,6 +59,7 @@ import { MultiLineComponent } from './d3/multi-line/multi-line.component';
         deps: [OidcConfigService, HttpClient],
         multi: true,
     },],
+  entryComponents:[ChooseXYComponent, ConfirmationDialogComponent, ErrorDialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

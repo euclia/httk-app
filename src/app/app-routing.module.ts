@@ -14,7 +14,7 @@ const routes: Routes = [
   {path: 'models', component:  HttkmodelsComponent},
   {path: 'createmodel', component:  CreatehttkmodelComponent},
   //{path: 'home', component:  CreatehttkmodelComponent},
-  {path: '' , redirectTo: 'createmodel', pathMatch: 'full'}
+  // {path: '' , redirectTo: 'createmodel', pathMatch: 'full'}
 ];
 
 @NgModule({
