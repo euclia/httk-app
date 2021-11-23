@@ -150,6 +150,7 @@ export class MultiLineComponent implements OnChanges {
   }
 
   private drawPath(): void {
+    console.log(this.dataGotAll)
     let organ = this.g.selectAll('.organ')
     .data(this.dataGotAll)
     .enter().append('g')
@@ -162,7 +163,7 @@ export class MultiLineComponent implements OnChanges {
 
     organ.append('text')
         .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]}; })
-        .attr('transform', (d) => 'translate(' + this.x(d.value.time) + ',' + this.y(d.value.concentration) + ')' )
+        .attr('transform', (d) => {'translate(' + this.x(d.value.time) + ',' + this.y(d.value.concentration) + ')', console.log(d)} )
         .attr('x', 2)
         .attr('dy', '-0.85em')
         .style('font', '10px sans-serif')
