@@ -35,7 +35,7 @@
       Download 
     </button>
   
-    <button matTooltip="View plots" mat-raised-button color="accent" (click)="plotsStart()">
+    <button matTooltip="View plots" mat-raised-button color="accent" (click)="plotsStart2()">
       Plots
     </button>
   </div>
@@ -45,7 +45,8 @@
   </div>
   
   <div *ngIf="createdPlotData">
-      <app-multi-line [xs]="xPlot" [ys]="yPlot"></app-multi-line>
+    <app-chart-component [dataSource]="showData"></app-chart-component>
+      <!-- <app-multi-line [xs]="xPlot" [ys]="yPlot"></app-multi-line> -->
   </div>
   
   

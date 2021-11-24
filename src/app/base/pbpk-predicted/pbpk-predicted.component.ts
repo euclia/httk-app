@@ -51,7 +51,7 @@ export class PbpkPredictedComponent implements OnChanges {
   createdPlotData:boolean = false;
   xPlot
   yPlot
-
+  showData = []
 
   constructor(
     private featureApi:FeatureApiService,
@@ -84,6 +84,12 @@ export class PbpkPredictedComponent implements OnChanges {
         })
       }
     })
+    // this.datasetApi.getDataEntryPaginated(this.predictedDataset._id, 0 , 30).subscribe((d:Dataset)=>{
+    //   this.datasetForChart = d
+    //   this.getWholeDataset(this.predictedDataset._id, 30 , 30)
+    // })
+    // console.log(this.datasetForChart)
+
 
   }
 
@@ -255,6 +261,84 @@ export class PbpkPredictedComponent implements OnChanges {
     })
   }
 
+  async plotsStart2(){
+    let dataVals = []
+    for(let key in this.dataSource[0]){
+      dataVals.push(key)
+    }
+
+    // delete this.xPlot;
+    // delete this.yPlot;
+    // this.dialogsService.chooseXY(dataVals).subscribe(XYS =>{
+      this.creatingPlotData = true;
+      this.datasetApi.getDataEntryPaginated(this.predictedDataset._id, 0 , 30).subscribe((d:Dataset)=>{
+        this.datasetForChart = d
+        this.getWholeDataset(this.predictedDataset._id, 30 , 30)
+      })
+      this.datasetDownloaded.subscribe(da => {
+        if(da === true){
+          // let xFeat:string[] = XYS['xData']
+          // let yFeat:string[] = XYS['yData']
+          let x = {}
+          // if(xFeat.length > 1 || yFeat.length === 0){
+          //   let init ={}
+          //   let report = <ErrorReport>{}
+          //   report.details = "Wrong X val. Should be 1";
+          //   report.httpStatus = 400;
+          //   report.message = "X should be single value and y should at least be one";
+          //   init['error'] = report;
+          //   let errorToHttp: HttpErrorResponse = new HttpErrorResponse(init);
+          //   this.dialogsService.onError(errorToHttp)
+          // }
+          let xKey = ''
+          let yKeys = {}
+          this.datasetForChart.features.forEach((f:FeatureInfo)=>{
+            // if(f.name ===  xFeat[0]){
+            //   xKey = f.key
+            // }
+            // if(yFeat.includes( f.name) ){
+              yKeys[f.name] = f.key
+            // }
+
+          })
+          let xs = {}
+          let xArr = []
+          let ys = {}
+          for ( let key in yKeys ){
+            ys[key] = []
+          }
+          this.datasetForChart.dataEntry.forEach((de:DataEntry)=>{
+            for (let key in de.values){
+              if(key === String(xKey)){
+                xArr.push(de.values[key])
+              }
+              for(let ykey in yKeys){
+                if(yKeys[ykey] === key){
+                  ys[ykey].push(de.values[key])
+                }
+              }
+            }
+            // xs[xFeat[0]] = xArr 
+          })
+          this.showData = this.getArray(ys)
+          this.creatingPlotData = false
+          this.createdPlotData = true;
+          this.xPlot = xs
+          this.yPlot = ys
+        }
+      })
+    // })
+  }
+
+  private getArray(object) {
+    return Object.keys(object).reduce(function (r, k) {
+        object[k].forEach(function (a, i) {
+            r[i] = r[i] || {};
+            r[i][k] = a;
+        });
+        return r;
+    }, []);
+  }
 
   // getWholeDataset(datasetId, start, howMany): Promise<string>{
   //   this.datasetApi.getDataEntryPaginated(datasetId, start, howMany).subscribe((data:Dataset) =>{
@@ -288,6 +372,7 @@ export class PbpkPredictedComponent implements OnChanges {
   getWholeDataset(datasetId, start, howMany){
     this.datasetApi.getDataEntryPaginated(datasetId, start, howMany).subscribe((data:Dataset) =>{
       let totalRows = data.totalRows
+      console.log(totalRows)
       let nowGot = this.datasetForChart.dataEntry.length
       if(nowGot < totalRows){
         this.datasetApi.getDataEntryPaginated(datasetId, nowGot, howMany).subscribe((datanow:Dataset) =>{

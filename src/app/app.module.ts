@@ -23,6 +23,9 @@ import { ConfirmationDialogComponent } from './dialogs/confirmation-dialog/confi
 import { PbpkPredictedComponent } from './base/pbpk-predicted/pbpk-predicted.component';
 import { ChooseXYComponent } from './dialogs/choose-x-y/choose-x-y.component';
 import { MultiLineComponent } from './d3/multi-line/multi-line.component';
+import { ChartComponentComponent } from './base/components/chart-component/chart-component.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { NgApexchartsModule } from "ng-apexcharts";
 
 
 
@@ -40,10 +43,13 @@ import { MultiLineComponent } from './d3/multi-line/multi-line.component';
     ConfirmationDialogComponent,
     PbpkPredictedComponent,
     ChooseXYComponent,
-    MultiLineComponent
+    MultiLineComponent,
+    ChartComponentComponent
   ],
   imports: [
     BrowserModule,
+    NgApexchartsModule,
+    MatCheckboxModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),

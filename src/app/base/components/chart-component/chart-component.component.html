@@ -1,0 +1,69 @@
+<div>
+
+    <div style="display: flex; flex-grow: grow" class="spacer">
+        <div>
+            <mat-form-field class="example-full-width">
+                <mat-label>X Axis</mat-label>
+                <mat-select placeholder="Select X Axis" (selectionChange)="myChange($event)" id="xaxis">
+                  <ng-container *ngFor="let c of allColumns">
+                    <mat-option [value]="c">{{ c }}</mat-option>
+        
+                  </ng-container>
+                </mat-select>
+              </mat-form-field>
+    
+            <mat-card class="form">
+            
+                <mat-card-header>
+                  <mat-card-title>Select Y axis</mat-card-title>
+                </mat-card-header>
+                
+                
+                <mat-card-actions>
+                    
+                    <section class="check-section">
+                        <span class="list-section">
+                          <mat-checkbox class="margin"
+                                        [checked]="allComplete"
+                                        [indeterminate]="someComplete()"
+                                        [disabled]="outFeats.disable"
+                                        (change)="setAll($event.checked)">
+                            {{outFeats.name}}
+                          </mat-checkbox>
+                        </span>
+                        <span class="list-section">
+                          <ul>
+                            <li *ngFor="let subtask of outFeats.subtasks">
+                              <mat-checkbox [(ngModel)]="subtask.completed"
+                                            [color]="subtask.color"
+                                            [disabled]="subtask.disable"
+                                            (change)="updateAllComplete()">
+                                {{subtask.name}}
+                              </mat-checkbox>
+                            </li>
+                          </ul>
+                        </span>
+                    </section>
+    
+                </mat-card-actions>  
+                  
+              </mat-card>
+        </div>
+
+        <div *ngIf="showChart" class="chart"> 
+            <apx-chart
+              [series]="chartOptions.series"
+              [chart]="chartOptions.chart"
+              [xaxis]="chartOptions.xaxis"          
+              [yaxis]="chartOptions.yaxis"
+              [dataLabels]="chartOptions.dataLabels"
+              [tooltip]="chartOptions.tooltip"
+              [grid]="chartOptions.grid"
+              [stroke]="chartOptions.stroke"
+              [title]="chartOptions.title"
+            ></apx-chart>
+        </div>
+    
+        
+    </div>
+</div>
