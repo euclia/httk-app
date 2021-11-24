@@ -65,7 +65,6 @@ export class PbpkPredictedComponent implements OnChanges {
     this.totalRows = this.predictedDataset.totalRows;
     this.data_available = false;
     this.isLoadingResults = true;
-    // console.log(this.predictedDataset)
     this.displayedColumns.push('Id')
     this.predictedDataset.features.forEach(fi => {
       this.displayedColumns.push(fi.name)
@@ -84,13 +83,6 @@ export class PbpkPredictedComponent implements OnChanges {
         })
       }
     })
-    // this.datasetApi.getDataEntryPaginated(this.predictedDataset._id, 0 , 30).subscribe((d:Dataset)=>{
-    //   this.datasetForChart = d
-    //   this.getWholeDataset(this.predictedDataset._id, 30 , 30)
-    // })
-    // console.log(this.datasetForChart)
-
-
   }
 
   ngAfterViewInit(){
@@ -372,7 +364,6 @@ export class PbpkPredictedComponent implements OnChanges {
   getWholeDataset(datasetId, start, howMany){
     this.datasetApi.getDataEntryPaginated(datasetId, start, howMany).subscribe((data:Dataset) =>{
       let totalRows = data.totalRows
-      console.log(totalRows)
       let nowGot = this.datasetForChart.dataEntry.length
       if(nowGot < totalRows){
         this.datasetApi.getDataEntryPaginated(datasetId, nowGot, howMany).subscribe((datanow:Dataset) =>{
