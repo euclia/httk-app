@@ -52,6 +52,7 @@ export class PbpkPredictedComponent implements OnChanges {
   xPlot
   yPlot
   showData = []
+  collectedData:Boolean = false;
 
   constructor(
     private featureApi:FeatureApiService,
@@ -182,6 +183,20 @@ export class PbpkPredictedComponent implements OnChanges {
       headers: this.displayedColumns.slice()
     };
 
+    // console.log('FIRST',this.collectedData)
+
+    // if (!this.collectedData){
+    //   this.creatingPlotData = true;
+    //   this.plotsStart2(false).finally(() =>{
+    //     console.log('FINISHED')
+    //     this.creatingPlotData = false;
+    //   })
+    //   // while (!this.collectedData) {
+    //   //   console.log(this.collectedData)
+    //   // }
+      
+    // }
+    
     this.datasourceToCsvService.createAndDownload(this.dataSource, "predicted_dataset", options);
   }
 
@@ -253,15 +268,25 @@ export class PbpkPredictedComponent implements OnChanges {
     })
   }
 
-  async plotsStart2(){
-    let dataVals = []
-    for(let key in this.dataSource[0]){
-      dataVals.push(key)
-    }
+  async gatherDownload(){
 
-    // delete this.xPlot;
-    // delete this.yPlot;
-    // this.dialogsService.chooseXY(dataVals).subscribe(XYS =>{
+    
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      useBom: true,
+      headers: this.displayedColumns.slice()
+    };
+
+    if (!this.collectedData){
+      let dataVals = []
+      for(let key in this.dataSource[0]){
+        dataVals.push(key)
+      }
+
       this.creatingPlotData = true;
       this.datasetApi.getDataEntryPaginated(this.predictedDataset._id, 0 , 30).subscribe((d:Dataset)=>{
         this.datasetForChart = d
@@ -269,29 +294,11 @@ export class PbpkPredictedComponent implements OnChanges {
       })
       this.datasetDownloaded.subscribe(da => {
         if(da === true){
-          // let xFeat:string[] = XYS['xData']
-          // let yFeat:string[] = XYS['yData']
-          let x = {}
-          // if(xFeat.length > 1 || yFeat.length === 0){
-          //   let init ={}
-          //   let report = <ErrorReport>{}
-          //   report.details = "Wrong X val. Should be 1";
-          //   report.httpStatus = 400;
-          //   report.message = "X should be single value and y should at least be one";
-          //   init['error'] = report;
-          //   let errorToHttp: HttpErrorResponse = new HttpErrorResponse(init);
-          //   this.dialogsService.onError(errorToHttp)
-          // }
+
           let xKey = ''
           let yKeys = {}
           this.datasetForChart.features.forEach((f:FeatureInfo)=>{
-            // if(f.name ===  xFeat[0]){
-            //   xKey = f.key
-            // }
-            // if(yFeat.includes( f.name) ){
               yKeys[f.name] = f.key
-            // }
-
           })
           let xs = {}
           let xArr = []
@@ -310,7 +317,95 @@ export class PbpkPredictedComponent implements OnChanges {
                 }
               }
             }
-            // xs[xFeat[0]] = xArr 
+          })
+          // this.showData = this.getArray(ys)
+          this.creatingPlotData = false
+          // this.datasourceToCsvService.createAndDownload(ys, "predicted_dataset", options);  
+          this.downloadPredictions(this.getArray(ys))
+          this.xPlot = xs
+          this.yPlot = ys
+        }
+      })
+
+    } else {
+      this.downloadPredictions(this.getArray(this.yPlot))
+      // this.datasourceToCsvService.createAndDownload(this.yPlot, "predicted_dataset", options);  
+    }    
+    this.collectedData = true;
+    // })
+  }
+
+  downloadPredictions(data){
+    var csvData:string = "";
+    // let features = [];
+    // features = features.concat(Object.keys(data));
+    
+    // let csvObject = [];
+    // for (let i in data){
+    //   let currObject = {}
+    //   currObject = Object.assign(currObject, data[i]);
+    //   csvObject.push(currObject)
+    // }
+
+    let header = Object.keys(data[0]).join(',');
+    let values = data.map(o => Object.values(o).join(',')).join('\n');
+
+    csvData += header + '\n' + values;
+   
+    var blob = new Blob(["\ufeff"+csvData], { type: 'text/csv; charset=utf-8' });
+    var url = window.URL.createObjectURL(blob);
+    const datasetName = "predicted_dataset.csv"
+    if(navigator.msSaveOrOpenBlob) {
+      navigator.msSaveBlob(blob, datasetName);
+    } else {
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = datasetName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+    window.URL.revokeObjectURL(url);
+  }
+
+  async plotsStart2(){
+
+    if (!this.collectedData){
+      let dataVals = []
+      for(let key in this.dataSource[0]){
+        dataVals.push(key)
+      }
+
+      this.creatingPlotData = true;
+      this.datasetApi.getDataEntryPaginated(this.predictedDataset._id, 0 , 30).subscribe((d:Dataset)=>{
+        this.datasetForChart = d
+        this.getWholeDataset(this.predictedDataset._id, 30 , 30)
+      })
+      this.datasetDownloaded.subscribe(da => {
+        if(da === true){
+
+          let xKey = ''
+          let yKeys = {}
+          this.datasetForChart.features.forEach((f:FeatureInfo)=>{
+              yKeys[f.name] = f.key
+          })
+          let xs = {}
+          let xArr = []
+          let ys = {}
+          for ( let key in yKeys ){
+            ys[key] = []
+          }
+          this.datasetForChart.dataEntry.forEach((de:DataEntry)=>{
+            for (let key in de.values){
+              if(key === String(xKey)){
+                xArr.push(de.values[key])
+              }
+              for(let ykey in yKeys){
+                if(yKeys[ykey] === key){
+                  ys[ykey].push(de.values[key])
+                }
+              }
+            }
           })
           this.showData = this.getArray(ys)
           this.creatingPlotData = false
@@ -319,6 +414,12 @@ export class PbpkPredictedComponent implements OnChanges {
           this.yPlot = ys
         }
       })
+
+    } else {
+      this.showData = this.getArray(this.yPlot)
+      this.createdPlotData = true;
+    }
+    this.collectedData = true;
     // })
   }
 
