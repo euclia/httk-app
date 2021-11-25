@@ -269,18 +269,6 @@ export class PbpkPredictedComponent implements OnChanges {
   }
 
   async gatherDownload(){
-
-    
-    var options = { 
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalseparator: '.',
-      showLabels: true, 
-      showTitle: true,
-      useBom: true,
-      headers: this.displayedColumns.slice()
-    };
-
     if (!this.collectedData){
       let dataVals = []
       for(let key in this.dataSource[0]){
@@ -321,53 +309,20 @@ export class PbpkPredictedComponent implements OnChanges {
           // this.showData = this.getArray(ys)
           this.creatingPlotData = false
           // this.datasourceToCsvService.createAndDownload(ys, "predicted_dataset", options);  
-          this.downloadPredictions(this.getArray(ys))
-          this.xPlot = xs
           this.yPlot = ys
+          this.datasourceToCsvService.downloadFullDataset(this.getArray(this.yPlot),'predicted_dataset')          
         }
       })
 
     } else {
-      this.downloadPredictions(this.getArray(this.yPlot))
+      this.datasourceToCsvService.downloadFullDataset(this.getArray(this.yPlot),'predicted_dataset')          
       // this.datasourceToCsvService.createAndDownload(this.yPlot, "predicted_dataset", options);  
     }    
     this.collectedData = true;
     // })
   }
 
-  downloadPredictions(data){
-    var csvData:string = "";
-    // let features = [];
-    // features = features.concat(Object.keys(data));
-    
-    // let csvObject = [];
-    // for (let i in data){
-    //   let currObject = {}
-    //   currObject = Object.assign(currObject, data[i]);
-    //   csvObject.push(currObject)
-    // }
-
-    let header = Object.keys(data[0]).join(',');
-    let values = data.map(o => Object.values(o).join(',')).join('\n');
-
-    csvData += header + '\n' + values;
-   
-    var blob = new Blob(["\ufeff"+csvData], { type: 'text/csv; charset=utf-8' });
-    var url = window.URL.createObjectURL(blob);
-    const datasetName = "predicted_dataset.csv"
-    if(navigator.msSaveOrOpenBlob) {
-      navigator.msSaveBlob(blob, datasetName);
-    } else {
-      var a = document.createElement("a");
-      a.href = url;
-      a.download = datasetName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-    window.URL.revokeObjectURL(url);
-  }
-
+ 
   async plotsStart2(){
 
     if (!this.collectedData){
